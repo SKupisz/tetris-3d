@@ -10,6 +10,8 @@ import BackgroundOfTheWall from "../assets/wall.png";
 import Base from "./game/base.jsx";
 import BlocksRendering from "./game/blocksRendering.jsx";
 
+import Data from "../data/block.json";
+
 const Game = (props) => {
     
     const [currentBlocks, setCurrentBlocks] = useState([{
@@ -31,29 +33,58 @@ const Game = (props) => {
         const elapsedTime = clock.getElapsedTime();
 
         let operand = [...currentBlocks];
-        let flag = false;
+        let flag = false, movingFlag = false; // flag is for detecting if any of the blocks are moving
+        // movingFlag is for detecting if the block can be moved
         for(let i = 0 ; i < operand.length; i++){
             if(operand[i]["centerCoords"][1] >= -1.5){
+
                 flag = true;
-                operand[i]["centerCoords"][1] -= 0.01;
+                operand[i]["centerCoords"][1] -= 0.05;
+
                 if(props.movingDirection !== 0){
+                    movingFlag = true;
                     switch(props.movingDirection){
                         case 1:
-                            if(operand[i]["centerCoords"][2] >= -1.5) operand[i]["centerCoords"][2]-=1;
+                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] <= -1.5) {
+                                    movingFlag = false;
+                                    break;
+                                }
+                            }
+                            if(movingFlag === true) operand[i]["centerCoords"][2]-=1;
                             break;
                         case 2:
-                            if(operand[i]["centerCoords"][0] <= 1.5) operand[i]["centerCoords"][0]+=1;
+                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                if(!(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] <= 1.5)) {
+                                    movingFlag = false;
+                                    break;
+                                }
+                            }
+                            if(movingFlag) operand[i]["centerCoords"][0]+=1;
                             break;
                         case 3:
-                            if(operand[i]["centerCoords"][2] <= 1.5) operand[i]["centerCoords"][2]+=1;
+                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] >= 1.5) {
+                                    movingFlag = false;
+                                    break;
+                                }
+                            }
+                            if(movingFlag === true) operand[i]["centerCoords"][2]+=1;
                             break;
                         case 4:
-                            if(operand[i]["centerCoords"][0] >= -1.5) operand[i]["centerCoords"][0]-=1;
+                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] < -1.5) {
+                                    movingFlag = false;
+                                    break;
+                                }
+                            }
+                            if(movingFlag) operand[i]["centerCoords"][0]-=1;
                             break;
                         default:
                             break;
                     }
-                    props.directionCallback();
+
+                    props.directionCallback(); // we reset the direction back to zero
                 }           
             }
 
@@ -67,10 +98,8 @@ const Game = (props) => {
             let operand = [...currentBlocks];
             operand.push({
                 centerCoords: [0,7,0],
-                color: "green",
-                blocksPositions: [
-                    [0,0,0]
-                ]
+                color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+                blocksPositions: Data["blocks"][Math.floor(Math.random()*3)]
             });
             setCurrentBlocks(operand);
             toggleIsBlockMoving(false);
