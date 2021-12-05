@@ -3,7 +3,6 @@ import React from "react";
 import BlockBox from "./blockBox.jsx";
 
 const BlocksRendering = (props) => {
-    console.log(props.currentBlocks);
     return <>
         {
             props.currentBlocks ? props.currentBlocks.map((elem, ind) => {

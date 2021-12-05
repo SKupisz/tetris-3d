@@ -19,14 +19,28 @@ const Game = (props) => {
         color: "red",
         blocksPositions: [
             [0,0,0]
-        ]
+        ],
+        counted: false
     }]);
+
+    const [filledBlocks, setFilledBlocks] = useState([]);
 
     const [isBlockMoving, toggleIsBlockMoving] = useState(true);
 
     const [boxMap, wallMap] = useLoader(TextureLoader, [BoxTexture, BackgroundOfTheWall]);
 
     const orbitsRef = useRef();
+
+    const StopTheBlock = (i, operand) => {
+        let filledOperand = [...filledBlocks];
+        for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+            const forAdding = [operand[i]["centerCoords"][0]+operand[i]["blocksPositions"][j][0],
+            operand[i]["centerCoords"][1]+operand[i]["blocksPositions"][j][1],
+            operand[i]["centerCoords"][2]+operand[i]["blocksPositions"][j][2]];
+            filledOperand.push(forAdding);
+        }
+        setFilledBlocks(filledOperand);
+    };
 
     useFrame(({clock}) => {
 
@@ -37,55 +51,75 @@ const Game = (props) => {
         // movingFlag is for detecting if the block can be moved
         for(let i = 0 ; i < operand.length; i++){
             if(operand[i]["centerCoords"][1] >= -1.5){
-
                 flag = true;
-                operand[i]["centerCoords"][1] -= 0.05;
-
-                if(props.movingDirection !== 0){
-                    movingFlag = true;
-                    switch(props.movingDirection){
-                        case 1:
-                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
-                                if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] <= -1.5) {
-                                    movingFlag = false;
-                                    break;
-                                }
-                            }
-                            if(movingFlag === true) operand[i]["centerCoords"][2]-=1;
+                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                    for(let k = 0 ; k < filledBlocks.length; k++){                        
+                        if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] === filledBlocks[k][0] && 
+                        operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] === filledBlocks[k][2] && 
+                        operand[i]["blocksPositions"][j][1]+operand[i]["centerCoords"][1] <= filledBlocks[k][1]+1){
+                            StopTheBlock(i, operand);
+                            operand[i]["counted"] = true;
+                            flag = false;
                             break;
-                        case 2:
-                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
-                                if(!(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] <= 1.5)) {
-                                    movingFlag = false;
-                                    break;
-                                }
-                            }
-                            if(movingFlag) operand[i]["centerCoords"][0]+=1;
-                            break;
-                        case 3:
-                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
-                                if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] >= 1.5) {
-                                    movingFlag = false;
-                                    break;
-                                }
-                            }
-                            if(movingFlag === true) operand[i]["centerCoords"][2]+=1;
-                            break;
-                        case 4:
-                            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
-                                if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] < -1.5) {
-                                    movingFlag = false;
-                                    break;
-                                }
-                            }
-                            if(movingFlag) operand[i]["centerCoords"][0]-=1;
-                            break;
-                        default:
-                            break;
+                        }
                     }
+                }
+                if(flag === true){
+                        
+                    operand[i]["centerCoords"][1] -= 0.05;
 
-                    props.directionCallback(); // we reset the direction back to zero
-                }           
+                    if(props.movingDirection !== 0){
+                        movingFlag = true;
+                        switch(props.movingDirection){
+                            case 1:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] <= -1.5) {
+                                        movingFlag = false;
+                                        break;
+                                    }
+                                }
+                                if(movingFlag === true) operand[i]["centerCoords"][2]-=1;
+                                break;
+                            case 2:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    if(!(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] <= 1.5)) {
+                                        movingFlag = false;
+                                        break;
+                                    }
+                                }
+                                if(movingFlag) operand[i]["centerCoords"][0]+=1;
+                                break;
+                            case 3:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] >= 1.5) {
+                                        movingFlag = false;
+                                        break;
+                                    }
+                                }
+                                if(movingFlag === true) operand[i]["centerCoords"][2]+=1;
+                                break;
+                            case 4:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] < -1.5) {
+                                        movingFlag = false;
+                                        break;
+                                    }
+                                }
+                                if(movingFlag) operand[i]["centerCoords"][0]-=1;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        props.directionCallback(); // we reset the direction back to zero
+                    } 
+
+                }          
+            }
+            else if(operand[i]["counted"] === false){
+                StopTheBlock(i, operand);
+                operand[i]["counted"] = true;
+                console.log(operand);
             }
 
         }
@@ -99,7 +133,8 @@ const Game = (props) => {
             operand.push({
                 centerCoords: [0,7,0],
                 color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
-                blocksPositions: Data["blocks"][Math.floor(Math.random()*3)]
+                blocksPositions: Data["blocks"][Math.floor(Math.random()*3)],
+                counted: false
             });
             setCurrentBlocks(operand);
             toggleIsBlockMoving(false);
