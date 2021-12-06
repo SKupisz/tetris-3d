@@ -12,19 +12,11 @@ import BlocksRendering from "./game/blocksRendering.jsx";
 
 import Data from "../data/block.json";
 
-const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCallback}) => {
+const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rotatingDirection, rotationCallback}) => {
     
-    const [currentBlocks, setCurrentBlocks] = useState([{
-        centerCoords: [0,7,0],
-        color: "red",
-        blocksPositions: [
-            [0,0,0]
-        ],
-        counted: false,
-        type: "dynamic"
-    }]);
+    const [currentBlocks, setCurrentBlocks] = useState([]);
     const [filledBlocks, setFilledBlocks] = useState([]);
-    const [isBlockMoving, toggleIsBlockMoving] = useState(true);
+    const [isBlockMoving, toggleIsBlockMoving] = useState(false);
     const [boxMap, wallMap] = useLoader(TextureLoader, [BoxTexture, BackgroundOfTheWall]);
     const orbitsRef = useRef();
 
@@ -46,16 +38,24 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
     const ClearUpTheBlocks = (blocks) => {
         let mainOperand = [...blocks],
         passedHeightsOperand = [], counter = 0;
-        let i = 0;
+        let i = 0, isStoppedHelper = false;
         console.log("beginning", mainOperand);
         while(i < mainOperand.length){
             if(passedHeightsOperand.includes(mainOperand[i]["coords"][1]) === false){
                 const helperHeight = mainOperand[i]["coords"][1];
                 counter = 1;
+                isStoppedHelper=false;
                 for(let j = i+1; j < mainOperand.length; j++){
                     console.log(mainOperand[j]["coords"][1], helperHeight);
+                    if(mainOperand[j]["coords"][1].toFixed(2) > 4){
+                        isStoppedHelper = true;
+                        break;
+                    }
                     if(mainOperand[j]["coords"][1].toFixed(2) === helperHeight.toFixed(2)) counter++;
-                    if(counter === 25) break;
+                }
+                if(isStoppedHelper === true){
+                    playedCallback();
+                    break;
                 }
                 console.log(counter);
                 if(counter === 25){ // number of possible fields
@@ -78,6 +78,19 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
         setFilledBlocks(mainOperand);
     };
 
+    const StartTheNewBlock = () => {
+        let operand = [];//...currentBlocks
+            operand.push({
+                centerCoords: [0,7,0],
+                color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+                blocksPositions: Data["blocks"][Math.floor(Math.random()*Data["blocks"].length)],
+                counted: false,
+                type: "dynamic"
+            });
+        if(isPlayed) setCurrentBlocks(operand);
+        toggleIsBlockMoving(false);
+    }
+
     useFrame(({clock}) => {
 
         const elapsedTime = clock.getElapsedTime();
@@ -86,7 +99,7 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
         let flag = false, movingFlag = false; // flag is for detecting if any of the blocks are moving
         // movingFlag is for detecting if the block can be moved
         for(let i = 0 ; i < operand.length; i++){
-            if(operand[i]["centerCoords"][1] > -1.45){
+            if(operand[i]["centerCoords"][1] >= -1.45){
                 flag = true;
                 for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
                     for(let k = 0 ; k < filledBlocks.length; k++){                        
@@ -181,18 +194,12 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
 
     useEffect(() => {
         if(isBlockMoving === false){
-            let operand = [];//...currentBlocks
-            operand.push({
-                centerCoords: [0,7,0],
-                color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
-                blocksPositions: Data["blocks"][Math.floor(Math.random()*Data["blocks"].length)],
-                counted: false,
-                type: "dynamic"
-            });
-            setCurrentBlocks(operand);
-            toggleIsBlockMoving(false);
+            StartTheNewBlock();
         }
-    }, [isBlockMoving]);
+    }, [isBlockMoving, isPlayed]);
+    useEffect(() => {
+        StartTheNewBlock();
+    }, []);
 
     return <>       
         <ambientLight color="#fff"/>
