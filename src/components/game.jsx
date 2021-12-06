@@ -12,7 +12,7 @@ import BlocksRendering from "./game/blocksRendering.jsx";
 
 import Data from "../data/block.json";
 
-const Game = (props) => {
+const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCallback}) => {
     
     const [currentBlocks, setCurrentBlocks] = useState([{
         centerCoords: [0,7,0],
@@ -20,15 +20,12 @@ const Game = (props) => {
         blocksPositions: [
             [0,0,0]
         ],
-        counted: false
+        counted: false,
+        type: "dynamic"
     }]);
-
     const [filledBlocks, setFilledBlocks] = useState([]);
-
     const [isBlockMoving, toggleIsBlockMoving] = useState(true);
-
     const [boxMap, wallMap] = useLoader(TextureLoader, [BoxTexture, BackgroundOfTheWall]);
-
     const orbitsRef = useRef();
 
     const StopTheBlock = (i, operand) => {
@@ -37,7 +34,11 @@ const Game = (props) => {
             const forAdding = [operand[i]["centerCoords"][0]+operand[i]["blocksPositions"][j][0],
             operand[i]["centerCoords"][1]+operand[i]["blocksPositions"][j][1],
             operand[i]["centerCoords"][2]+operand[i]["blocksPositions"][j][2]];
-            filledOperand.push(forAdding);
+            filledOperand.push({
+                color: operand[i]["color"],
+                coords: forAdding,
+                type: "static"
+            });
         }
         setFilledBlocks(filledOperand);
     };
@@ -54,9 +55,9 @@ const Game = (props) => {
                 flag = true;
                 for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
                     for(let k = 0 ; k < filledBlocks.length; k++){                        
-                        if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] === filledBlocks[k][0] && 
-                        operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] === filledBlocks[k][2] && 
-                        operand[i]["blocksPositions"][j][1]+operand[i]["centerCoords"][1] <= filledBlocks[k][1]+1){
+                        if(operand[i]["blocksPositions"][j][0]+operand[i]["centerCoords"][0] === filledBlocks[k]["coords"][0] && 
+                        operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] === filledBlocks[k]["coords"][2] && 
+                        operand[i]["blocksPositions"][j][1]+operand[i]["centerCoords"][1] <= filledBlocks[k]["coords"][1]+1){
                             StopTheBlock(i, operand);
                             operand[i]["counted"] = true;
                             flag = false;
@@ -68,9 +69,9 @@ const Game = (props) => {
                         
                     operand[i]["centerCoords"][1] -= 0.05;
 
-                    if(props.movingDirection !== 0){
+                    if(movingDirection !== 0){
                         movingFlag = true;
-                        switch(props.movingDirection){
+                        switch(movingDirection){
                             case 1:
                                 for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
                                     if(operand[i]["blocksPositions"][j][2]+operand[i]["centerCoords"][2] <= -1.5) {
@@ -111,15 +112,31 @@ const Game = (props) => {
                                 break;
                         }
 
-                        props.directionCallback(); // we reset the direction back to zero
+                        directionCallback(); // we reset the direction back to zero
                     } 
+                    if(rotatingDirection !== 0){
+                        switch(rotatingDirection){
+                            case 1:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    let helper = operand[i]["blocksPositions"][j][0];
+                                    operand[i]["blocksPositions"][j][0] = operand[i]["blocksPositions"][j][2];
+                                    operand[i]["blocksPositions"][j][2] = helper;
+                                    operand[i]["blocksPositions"][j][0]*=(-1);
+                                }
+                                break;
+                            case -1: 
+                                break;
+                            default: 
+                                break;
+                        }
+                        rotationCallback(); // we reset the rotation back to zero
+                    }
 
                 }          
             }
             else if(operand[i]["counted"] === false){
                 StopTheBlock(i, operand);
                 operand[i]["counted"] = true;
-                console.log(operand);
             }
 
         }
@@ -129,14 +146,15 @@ const Game = (props) => {
 
     useEffect(() => {
         if(isBlockMoving === false){
-            let operand = [...currentBlocks];
+            let operand = [];//...currentBlocks
             operand.push({
                 centerCoords: [0,7,0],
                 color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
-                blocksPositions: Data["blocks"][Math.floor(Math.random()*3)],
-                counted: false
+                blocksPositions: Data["blocks"][Math.floor(Math.random()*Data["blocks"].length)],
+                counted: false,
+                type: "dynamic"
             });
-            setCurrentBlocks(operand);
+            if(operand.length <= 3) setCurrentBlocks(operand);
             toggleIsBlockMoving(false);
         }
     }, [isBlockMoving]);
@@ -145,7 +163,7 @@ const Game = (props) => {
         <ambientLight color="#fff"/>
         <group position={[0,-6,-6]}>
             <Base textureMap={boxMap} wallMap={wallMap}/>
-            <BlocksRendering currentBlocks={currentBlocks}/>
+            <BlocksRendering currentBlocks={[...currentBlocks, ...filledBlocks]}/>
             <OrbitControls enableZoom={true} enableRotation={true} enablePan={false}
                 rotateSpeed={0.8} zoomSpeed={0.6} zoom0={0.4} maxZoom={0.9} minZoom={0.4} 
                 target={[0 , -6, -6]} ref = {orbitsRef}/>

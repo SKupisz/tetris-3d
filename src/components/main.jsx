@@ -6,7 +6,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-import { SteeringPanel, SteeringButtons, SteeringButton } from "../styled/styled.jsx";
+import { SteeringPanel, SteeringButtons, SteeringButton,
+    RotatingButtonsPanel, RotateButton } from "../styled/styled.jsx";
 
 import Game from "./game.jsx";
 
@@ -18,12 +19,15 @@ const CanvasContainer = styled.div`
 const Main = () => {
 
     const [movingDirection, setMovingDirection] = useState(0); // 1 - north, 2 - west, 3 - south, 4 - east
+    const [rotatingDirection, setRotatingDirection] = useState(0); // 1 - right, -1 - left
 
     return <CanvasContainer>
         <Canvas>
             <Suspense fallback={null}>
                 <Game movingDirection = {movingDirection}
-                directionCallback={() => setMovingDirection(0)}/>
+                directionCallback={() => setMovingDirection(0)}
+                rotatingDirection={rotatingDirection}
+                rotationCallback={() => setRotatingDirection(0)}/>
             </Suspense>
         </Canvas>
         <SteeringPanel className="block-center">
@@ -48,6 +52,10 @@ const Main = () => {
                 </SteeringButton>
                 <SteeringButton/>
             </SteeringButtons>
+            <RotatingButtonsPanel className="block-center">
+                <RotateButton onClick = {() => setRotatingDirection(-1)}>Left</RotateButton>
+                <RotateButton onClick={() => setRotatingDirection(1)}>Right</RotateButton>
+            </RotatingButtonsPanel>
         </SteeringPanel>
     </CanvasContainer>
 };

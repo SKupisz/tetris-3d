@@ -12,7 +12,7 @@ export const SteeringPanel = styled.div`
 
 export const SteeringButtons = styled.section`
     width: calc(95% - 10px);
-    height: calc(60% - 10px);
+    height: calc(40% - 10px);
     padding: 5px;
     position: relative;
     top: 2vh;
@@ -40,4 +40,34 @@ export const SteeringButton = styled.div`
                 filter: brightness(70%);
             }
         ` : ``}
+`;
+
+export const RotatingButtonsPanel = styled.section`
+    width: calc(100% - 10px);
+    height: calc(40% - 10px);
+    padding: 5px;
+    position: relative;
+    top: 2vh;
+    text-align: center;
+`;
+
+export const RotateButton = styled.div`
+    width: calc(50% - 20px);
+    padding: 5px;
+    margin: 5px;
+    height: calc(10vh - 20px);
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 1.4em;
+    transition: filter 0.4s;
+    color: rgba(240,240,240,.9);
+    background: rgba(240,240,240,.1);
+    cursor: pointer;
+    line-height: calc(10vh - 20px);
+
+    &:hover{
+        filter: brightness(70%);
+    }
 `;
