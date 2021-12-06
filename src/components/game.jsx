@@ -40,7 +40,42 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
                 type: "static"
             });
         }
-        setFilledBlocks(filledOperand);
+        ClearUpTheBlocks(filledOperand);
+    };
+
+    const ClearUpTheBlocks = (blocks) => {
+        let mainOperand = [...blocks],
+        passedHeightsOperand = [], counter = 0;
+        let i = 0;
+        console.log("beginning", mainOperand);
+        while(i < mainOperand.length){
+            if(passedHeightsOperand.includes(mainOperand[i]["coords"][1]) === false){
+                const helperHeight = mainOperand[i]["coords"][1];
+                counter = 1;
+                for(let j = i+1; j < mainOperand.length; j++){
+                    console.log(mainOperand[j]["coords"][1], helperHeight);
+                    if(mainOperand[j]["coords"][1].toFixed(2) === helperHeight.toFixed(2)) counter++;
+                    if(counter === 25) break;
+                }
+                console.log(counter);
+                if(counter === 25){ // number of possible fields
+                    let helperInd = 0;
+                    while(helperInd < mainOperand.length){
+                        if(mainOperand[helperInd]["coords"][1].toFixed(2) === helperHeight.toFixed(2)){
+                            mainOperand = mainOperand.splice(0,helperInd).concat(mainOperand.splice(helperInd+1, mainOperand.length));
+                        }
+                        else {
+                            mainOperand[helperInd]["coords"][1]--;
+                            helperInd++;
+                        }
+                    }
+                }
+                passedHeightsOperand.push(helperHeight);
+            }
+            console.log(mainOperand);
+            i++;
+        }
+        setFilledBlocks(mainOperand);
     };
 
     useFrame(({clock}) => {
@@ -51,7 +86,7 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
         let flag = false, movingFlag = false; // flag is for detecting if any of the blocks are moving
         // movingFlag is for detecting if the block can be moved
         for(let i = 0 ; i < operand.length; i++){
-            if(operand[i]["centerCoords"][1] >= -1.5){
+            if(operand[i]["centerCoords"][1] > -1.45){
                 flag = true;
                 for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
                     for(let k = 0 ; k < filledBlocks.length; k++){                        
@@ -154,7 +189,7 @@ const Game = ({movingDirection, directionCallback, rotatingDirection, rotationCa
                 counted: false,
                 type: "dynamic"
             });
-            if(operand.length <= 3) setCurrentBlocks(operand);
+            setCurrentBlocks(operand);
             toggleIsBlockMoving(false);
         }
     }, [isBlockMoving]);
