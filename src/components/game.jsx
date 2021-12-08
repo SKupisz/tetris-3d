@@ -12,7 +12,7 @@ import BlocksRendering from "./game/blocksRendering.jsx";
 
 import Data from "../data/block.json";
 
-const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rotatingDirection, rotationCallback}) => {
+const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, directionCallback, rotatingDirection, rotationCallback}) => {
     
     const [currentBlocks, setCurrentBlocks] = useState([]);
     const [filledBlocks, setFilledBlocks] = useState([]);
@@ -75,6 +75,7 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
                             helperInd++;
                         }
                     }
+                    setCounter(counter+25);
                 }
                 passedHeightsOperand.push(helperHeight);
             }

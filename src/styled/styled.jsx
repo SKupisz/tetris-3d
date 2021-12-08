@@ -54,7 +54,8 @@ export const PlayButton = styled.button`
     box-shadow: 3px 3px 4px #000;
     text-transform: uppercase;
     position: relative;
-    top: 40vh;
+    top: ${(props) => 
+        props.top ? props.top : "40vh"};
     cursor: pointer;
     transition: filter 0.4s;
 
@@ -75,6 +76,21 @@ export const PlayButton = styled.button`
     }
 `;
 
+export const LosingPanelScore = styled.header`
+    width: calc(90% - 20px);
+    padding: 10px;
+    text-align: center;
+    font-size: 2.1em;
+    letter-spacing: 0.05em;
+    color: rgba(230,230,230,.9);
+    font-family: "Mohave", sans-serif;
+    text-shadow: 3px 3px 4px #000;
+    margin-bottom: 4vh;
+    margin-top: 2vh;
+    position: relative;
+    top: 42vh;
+`;
+
 export const SteeringPanel = styled.div`
     width: 20%;
     height: 100%;
@@ -83,6 +99,20 @@ export const SteeringPanel = styled.div`
     position: relative;
     top: -100%;
     left: 40%;
+`;
+
+export const SteeringPanelScore = styled.header`
+    width: calc(100% - 20px);
+    padding: 10px;
+    text-align: center;
+    font-size: 1.6em;
+    letter-spacing: 0.05em;
+    color: rgba(240,240, 240, .6);
+    font-family: "Mohave", sans-serif;
+    text-shadow: 3px 3px 4px #000;
+    margin-bottom: 4vh;
+    position: relative;
+    top: 1vh;
 `;
 
 export const SteeringButtons = styled.section`

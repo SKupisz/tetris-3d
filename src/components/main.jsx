@@ -7,8 +7,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import { WelcomePanel, WelcomeHeader, PlayButton,
-    SteeringPanel, SteeringButtons, SteeringButton,
-    RotatingButtonsPanel, RotateButton } from "../styled/styled.jsx";
+    SteeringPanel, SteeringPanelScore, SteeringButtons, SteeringButton,
+    RotatingButtonsPanel, RotateButton, LosingPanelScore } from "../styled/styled.jsx";
 
 import Game from "./game.jsx";
 
@@ -23,11 +23,19 @@ const Main = () => {
     const [rotatingDirection, setRotatingDirection] = useState(0); // 1 - right, -1 - left
     const [isPlayed, toggleIsPlayed] = useState(false);
     const [isGameStarted, toggleIsGameStarted] = useState(false);
+    const [scoreCounter, setScoreCounter] = useState(0);
+
+    const BeginningProcedure = () => {
+        setScoreCounter(0);
+        toggleIsGameStarted(true);
+        toggleIsPlayed(true);
+    }
 
     return <CanvasContainer>
         <Canvas>
             <Suspense fallback={null}>
                 <Game isPlayed={isPlayed} playedCallback={() => toggleIsPlayed(!isPlayed)} 
+                counter={scoreCounter} setCounter={(newScore) => setScoreCounter(newScore)}
                 movingDirection = {movingDirection}
                 directionCallback={() => setMovingDirection(0)}
                 rotatingDirection={rotatingDirection}
@@ -36,6 +44,9 @@ const Main = () => {
         </Canvas>
         {
                 isGameStarted ? <SteeringPanel className="block-center">
+                    <SteeringPanelScore className="block-center">
+                        Current Score: {scoreCounter}
+                    </SteeringPanelScore>
                 <SteeringButtons className="block-center">
                     <SteeringButton/>
                     <SteeringButton isbutton onClick = {() => setMovingDirection(1)}>
@@ -65,7 +76,7 @@ const Main = () => {
                 <WelcomeHeader className="block-center">
                     Tetris 3d
                 </WelcomeHeader>
-                <PlayButton className="block-center" onClick = {() => {toggleIsGameStarted(true);toggleIsPlayed(true);}}>Play</PlayButton>
+                <PlayButton className="block-center" onClick = {() => BeginningProcedure()}>Play</PlayButton>
             </WelcomePanel>
         }
         {
@@ -73,7 +84,10 @@ const Main = () => {
             <WelcomeHeader className="block-center">
                 You've lost
             </WelcomeHeader>
-            <PlayButton className="block-center" onClick = {() => {toggleIsGameStarted(true);toggleIsPlayed(true);}}>Play</PlayButton>
+            <LosingPanelScore className="block-center">
+                Your score: {scoreCounter}
+            </LosingPanelScore>
+            <PlayButton className="block-center" onClick = {() => BeginningProcedure()} top={"49vh"}>Play</PlayButton>
         </WelcomePanel>: null
         }
         
