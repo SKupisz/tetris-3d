@@ -136,7 +136,8 @@ export const SteeringButton = styled.div`
     font-size: 1.9em;
     ${(props) => 
         props.isbutton ? `
-            background: rgba(240,240,240,.1);
+            background: ${
+                props.color ? props.color : "rgba(240,240,240,.7)"};
             border-radius: 50%;
             cursor: pointer;
             transition: filter 0.4s;

@@ -26,19 +26,19 @@ const Base = (props) => {
             {column(props.textureMap, COLUMNS_NUMBER, -3, -3)}
             <mesh position={[3,1.5,0]}>
                 <boxGeometry args={[1,COLUMNS_NUMBER,5]}/>
-                <meshStandardMaterial map={props.wallMap} transparent={true}/>
+                <meshStandardMaterial map={props.wallMaps[0]} transparent={true}/>
             </mesh>
             <mesh position={[0,1.5,3]}>
                 <boxGeometry args={[5,COLUMNS_NUMBER,1]}/>
-                <meshStandardMaterial map={props.wallMap} transparent={true}/>
+                <meshStandardMaterial map={props.wallMaps[1]} transparent={true}/>
             </mesh>
             <mesh position={[-3,1.5,0]}>
                 <boxGeometry args={[1,COLUMNS_NUMBER,5]}/>
-                <meshStandardMaterial map={props.wallMap} transparent={true}/>
+                <meshStandardMaterial map={props.wallMaps[2]} transparent={true}/>
             </mesh>
             <mesh position={[0,1.5,-3]}>
                 <boxGeometry args={[5,COLUMNS_NUMBER,1]}/>
-                <meshStandardMaterial map={props.wallMap} transparent={true}/>
+                <meshStandardMaterial map={props.wallMaps[3]} transparent={true}/>
             </mesh>
     </>
 };

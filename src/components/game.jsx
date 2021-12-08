@@ -6,6 +6,9 @@ import * as THREE from "three";
 
 import BoxTexture from "../assets/box.jpg";
 import BackgroundOfTheWall from "../assets/wall.png";
+import BackgroundOfTheWall1 from "../assets/wall_1.png";
+import BackgroundOfTheWall2 from "../assets/wall_2.png";
+import BackgroundOfTheWall3 from "../assets/wall_3.png";
 
 import Base from "./game/base.jsx";
 import BlocksRendering from "./game/blocksRendering.jsx";
@@ -17,8 +20,11 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
     const [currentBlocks, setCurrentBlocks] = useState([]);
     const [filledBlocks, setFilledBlocks] = useState([]);
     const [isBlockMoving, toggleIsBlockMoving] = useState(false);
-    const [boxMap, wallMap] = useLoader(TextureLoader, [BoxTexture, BackgroundOfTheWall]);
+    const [boxMap, wallMap, wallMap1, wallMap2, wallMap3] = useLoader(TextureLoader, [BoxTexture, BackgroundOfTheWall,
+        BackgroundOfTheWall1, BackgroundOfTheWall2, BackgroundOfTheWall3]);
     const orbitsRef = useRef();
+
+    const LIGHT_POS_COORD = 14;
 
     const StopTheBlock = (i, operand) => {
         if(isPlayed === true){
@@ -89,7 +95,8 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
         let operand = [];//...currentBlocks
             operand.push({
                 centerCoords: [0,7,0],
-                color: `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`,
+                color: `rgb(${100+Math.floor(Math.random()*155)}, ${100+Math.floor(Math.random()*155)}, 
+                ${100+Math.floor(Math.random()*155)})`,
                 blocksPositions: Data["blocks"][Math.floor(Math.random()*Data["blocks"].length)],
                 counted: false,
                 type: "dynamic"
@@ -122,7 +129,7 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
                 }
                 if(flag === true){
                         
-                    operand[i]["centerCoords"][1] -= 0.05;
+                    operand[i]["centerCoords"][1] -= 0.03;
 
                     if(movingDirection !== 0){
                         movingFlag = true;
@@ -213,9 +220,13 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
     }, [isPlayed]);
 
     return <>       
-        <ambientLight color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
+        <spotLight position={[-LIGHT_POS_COORD,-10,-LIGHT_POS_COORD]} color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
+        <spotLight position={[LIGHT_POS_COORD,-10,-LIGHT_POS_COORD]} color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
+        <spotLight position={[-LIGHT_POS_COORD,-10,LIGHT_POS_COORD]} color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
+        <spotLight position={[LIGHT_POS_COORD,-10,LIGHT_POS_COORD]} color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
+        <spotLight position={[LIGHT_POS_COORD,15,LIGHT_POS_COORD]} angle={180} color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
         <group position={[0,-6,-6]}>
-            <Base textureMap={boxMap} wallMap={wallMap}/>
+            <Base textureMap={boxMap} wallMaps={[wallMap, wallMap1, wallMap2, wallMap3]}/>
             <BlocksRendering currentBlocks={[...currentBlocks, ...filledBlocks]}/>
             <OrbitControls enableZoom={true} enableRotation={true} enablePan={false}
                 rotateSpeed={0.8} zoomSpeed={0.6} zoom0={0.4} maxZoom={0.9} minZoom={0.4} 

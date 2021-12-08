@@ -49,12 +49,12 @@ const Main = () => {
                     </SteeringPanelScore>
                 <SteeringButtons className="block-center">
                     <SteeringButton/>
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(1)}>
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(1)} color="rgba(222, 247, 0,.7)">
                         <ArrowUpwardIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
 
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(4)}>
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(4)} color="rgba(20,200,20,.7)">
                         <ArrowBackIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
@@ -63,7 +63,7 @@ const Main = () => {
                     </SteeringButton>
 
                     <SteeringButton/>
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(3)}>
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(3)} color="rgba(200,20,20,.7)">
                         <ArrowDownwardIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
