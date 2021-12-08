@@ -21,32 +21,38 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
     const orbitsRef = useRef();
 
     const StopTheBlock = (i, operand) => {
-        let filledOperand = [...filledBlocks];
-        for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
-            const forAdding = [operand[i]["centerCoords"][0]+operand[i]["blocksPositions"][j][0],
-            operand[i]["centerCoords"][1]+operand[i]["blocksPositions"][j][1],
-            operand[i]["centerCoords"][2]+operand[i]["blocksPositions"][j][2]];
-            filledOperand.push({
-                color: operand[i]["color"],
-                coords: forAdding,
-                type: "static"
-            });
+        if(isPlayed === true){
+            let filledOperand = [...filledBlocks];
+            for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                const forAdding = [operand[i]["centerCoords"][0]+operand[i]["blocksPositions"][j][0],
+                operand[i]["centerCoords"][1]+operand[i]["blocksPositions"][j][1],
+                operand[i]["centerCoords"][2]+operand[i]["blocksPositions"][j][2]];
+                if(forAdding[1] <= 4) filledOperand.push({
+                    color: operand[i]["color"],
+                    coords: forAdding,
+                    type: "static"
+                });
+                else{
+                    playedCallback();
+                    break;
+                }
+            }
+            ClearUpTheBlocks(filledOperand);
         }
-        ClearUpTheBlocks(filledOperand);
     };
 
     const ClearUpTheBlocks = (blocks) => {
         let mainOperand = [...blocks],
         passedHeightsOperand = [], counter = 0;
         let i = 0, isStoppedHelper = false;
-        console.log("beginning", mainOperand);
+        //console.log("beginning", mainOperand);
         while(i < mainOperand.length){
             if(passedHeightsOperand.includes(mainOperand[i]["coords"][1]) === false){
                 const helperHeight = mainOperand[i]["coords"][1];
                 counter = 1;
                 isStoppedHelper=false;
                 for(let j = i+1; j < mainOperand.length; j++){
-                    console.log(mainOperand[j]["coords"][1], helperHeight);
+                    //console.log(mainOperand[j]["coords"][1], helperHeight);
                     if(mainOperand[j]["coords"][1].toFixed(2) > 4){
                         isStoppedHelper = true;
                         break;
@@ -57,7 +63,7 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
                     playedCallback();
                     break;
                 }
-                console.log(counter);
+                //console.log(counter);
                 if(counter === 25){ // number of possible fields
                     let helperInd = 0;
                     while(helperInd < mainOperand.length){
@@ -72,7 +78,7 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
                 }
                 passedHeightsOperand.push(helperHeight);
             }
-            console.log(mainOperand);
+            //console.log(mainOperand);
             i++;
         }
         setFilledBlocks(mainOperand);
@@ -180,7 +186,7 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
                         rotationCallback(); // we reset the rotation back to zero
                     }
 
-                }          
+                }       
             }
             else if(operand[i]["counted"] === false){
                 StopTheBlock(i, operand);
@@ -198,11 +204,15 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
         }
     }, [isBlockMoving, isPlayed]);
     useEffect(() => {
-        StartTheNewBlock();
-    }, []);
+        if(isPlayed === true){
+            setCurrentBlocks([]);
+            setFilledBlocks([]);
+            StartTheNewBlock();
+        }
+    }, [isPlayed]);
 
     return <>       
-        <ambientLight color="#fff"/>
+        <ambientLight color={currentBlocks.length > 0 ? currentBlocks[0]["color"] : "#fff"} intensity={2}/>
         <group position={[0,-6,-6]}>
             <Base textureMap={boxMap} wallMap={wallMap}/>
             <BlocksRendering currentBlocks={[...currentBlocks, ...filledBlocks]}/>
@@ -212,5 +222,6 @@ const Game = ({isPlayed, playedCallback, movingDirection, directionCallback, rot
         </group>
     </>
 };
+//<ambientLight color="#fff"/>
 
 export default Game;

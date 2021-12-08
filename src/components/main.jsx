@@ -68,6 +68,14 @@ const Main = () => {
                 <PlayButton className="block-center" onClick = {() => {toggleIsGameStarted(true);toggleIsPlayed(true);}}>Play</PlayButton>
             </WelcomePanel>
         }
+        {
+            (isGameStarted === true && isPlayed === false) ? <WelcomePanel className="block-center">
+            <WelcomeHeader className="block-center">
+                You've lost
+            </WelcomeHeader>
+            <PlayButton className="block-center" onClick = {() => {toggleIsGameStarted(true);toggleIsPlayed(true);}}>Play</PlayButton>
+        </WelcomePanel>: null
+        }
         
     </CanvasContainer>
 };

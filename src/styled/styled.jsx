@@ -3,8 +3,8 @@ import styled from "styled-components";
 export const WelcomePanel  = styled.section`
     width: 100%;
     height: 100%;
-    position: relative;
-    top: -100%;
+    position: absolute;
+    top: 0%;
     left: 0%;
     text-align: center;
     line-height: 50%;
