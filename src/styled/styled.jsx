@@ -92,13 +92,25 @@ export const LosingPanelScore = styled.header`
 `;
 
 export const SteeringPanel = styled.div`
-    width: 20%;
-    height: 100%;
+    width: 100%;
+    height: 30%;
     background: rgba(0,0,0,.9);
     text-align: center;
     position: relative;
-    top: -100%;
-    left: 40%;
+    top: -30%;
+    left: 0%;
+    
+    @media screen and (min-width: 768px){
+        width: 30%;
+        height: 100%;
+        top: -100%;
+        left: 35%;
+    }
+
+    @media screen and (min-width: 1024px){
+        width: 20%;
+        left: 40%;
+    }
 `;
 
 export const SteeringPanelScore = styled.header`
@@ -110,30 +122,53 @@ export const SteeringPanelScore = styled.header`
     color: rgba(240,240, 240, .6);
     font-family: "Mohave", sans-serif;
     text-shadow: 3px 3px 4px #000;
-    margin-bottom: 4vh;
+    margin-bottom: 2vh;
     position: relative;
     top: 1vh;
+
+    @media screen and (min-width: 768px){
+        margin-bottom: 4vh;
+    }
 `;
 
 export const SteeringButtons = styled.section`
-    width: calc(95% - 10px);
-    height: calc(40% - 10px);
+    width: calc(50% - 20px);
+    height: calc(100% - 10px);
     padding: 5px;
     position: relative;
     top: 2vh;
     text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px 5px;
+
+    @media screen and (min-width: 425px){
+        width: calc(40% - 20px);
+    }
+
+    @media screen and (min-width: 685px){
+        width: calc(30% - 20px);
+    }
+
+    @media screen and (min-width: 768px){    
+        width: calc(95% - 10px);
+        height: calc(40% - 10px);
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 `;
 
 export const SteeringButton = styled.div`
     width: calc(33% - 10px);
-    height: calc(10vh - 10px);
+    height: calc(6vh - 10px);
     margin: 5px;
     display: inline-block;
     vertical-align: top;
     text-align: center;
     color: rgba(240,240,240,.95);
-    line-height: calc(12vh - 10px);
-    font-size: 1.9em;
+    line-height: calc(7vh - 10px);
+    font-size: 0.95em;
     ${(props) => 
         props.isbutton ? `
             background: ${
@@ -146,34 +181,62 @@ export const SteeringButton = styled.div`
                 filter: brightness(70%);
             }
         ` : ``}
+
+    @media screen and (min-width: 425px){
+        width: calc(30% - 10px);
+    }
+
+    @media screen and (min-width: 768px){
+        width: calc(33% - 10px);
+        height: calc(10vh - 10px);
+        line-height: calc(12vh - 10px);
+        font-size: 1.9em;
+    }
 `;
 
 export const RotatingButtonsPanel = styled.section`
-    width: calc(100% - 10px);
-    height: calc(40% - 10px);
+    width: calc(50% - 20px);
+    height: calc(100% - 10px);
     padding: 5px;
     position: relative;
     top: 2vh;
     text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px 5px;
+    
+    @media screen and (min-width: 768px){
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: calc(100% - 10px);
+        height: calc(40% - 10px);
+    }
 `;
 
 export const RotateButton = styled.div`
-    width: calc(50% - 20px);
+    width: calc(70% - 20px);
     padding: 5px;
     margin: 5px;
-    height: calc(10vh - 20px);
+    height: calc(7vh - 20px);
     display: inline-block;
     vertical-align: top;
     text-align: center;
     border-radius: 10px;
-    font-size: 1.4em;
+    font-size: 1em;
     transition: filter 0.4s;
     color: rgba(240,240,240,.9);
     background: rgba(240,240,240,.1);
     cursor: pointer;
-    line-height: calc(10vh - 20px);
+    line-height: calc(7vh - 20px);
 
     &:hover{
         filter: brightness(70%);
+    }
+
+    @media screen and (min-width: 425px){
+        width: calc(50% - 20px);
+        height: calc(10vh - 20px);
+        line-height: calc(10vh - 20px);
     }
 `;

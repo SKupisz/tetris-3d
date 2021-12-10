@@ -49,12 +49,12 @@ const Main = () => {
                     </SteeringPanelScore>
                 <SteeringButtons className="block-center">
                     <SteeringButton/>
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(1)} color="rgba(222, 247, 0,.7)">
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(1)} color="rgba(222, 247, 0,.2)">
                         <ArrowUpwardIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
 
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(4)} color="rgba(20,200,20,.7)">
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(4)} color="rgba(20,200,20,.2)">
                         <ArrowBackIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
@@ -63,7 +63,7 @@ const Main = () => {
                     </SteeringButton>
 
                     <SteeringButton/>
-                    <SteeringButton isbutton onClick = {() => setMovingDirection(3)} color="rgba(200,20,20,.7)">
+                    <SteeringButton isbutton onClick = {() => setMovingDirection(3)} color="rgba(200,20,20,.2)">
                         <ArrowDownwardIcon style={{fontSize: "1.3em"}}/>
                     </SteeringButton>
                     <SteeringButton/>
@@ -80,7 +80,12 @@ const Main = () => {
             </WelcomePanel>
         }
         {
-            (isGameStarted === true && isPlayed === false) ? <WelcomePanel className="block-center">
+            (isGameStarted === true && isPlayed === false) ? null: null
+        }
+        
+    </CanvasContainer>
+};
+/* <WelcomePanel className="block-center">
             <WelcomeHeader className="block-center">
                 You've lost
             </WelcomeHeader>
@@ -88,10 +93,5 @@ const Main = () => {
                 Your score: {scoreCounter}
             </LosingPanelScore>
             <PlayButton className="block-center" onClick = {() => BeginningProcedure()} top={"49vh"}>Play</PlayButton>
-        </WelcomePanel>: null
-        }
-        
-    </CanvasContainer>
-};
-
+        </WelcomePanel>*/
 export default Main;
