@@ -15,6 +15,7 @@ import Game from "./game.jsx";
 const CanvasContainer = styled.div`
     width: 100%;
     height: 100%;
+    overflow-y: hidden;
 `;
 
 const Main = () => {
@@ -80,12 +81,7 @@ const Main = () => {
             </WelcomePanel>
         }
         {
-            (isGameStarted === true && isPlayed === false) ? null: null
-        }
-        
-    </CanvasContainer>
-};
-/* <WelcomePanel className="block-center">
+            (isGameStarted === true && isPlayed === false) ? <WelcomePanel className="block-center">
             <WelcomeHeader className="block-center">
                 You've lost
             </WelcomeHeader>
@@ -93,5 +89,9 @@ const Main = () => {
                 Your score: {scoreCounter}
             </LosingPanelScore>
             <PlayButton className="block-center" onClick = {() => BeginningProcedure()} top={"49vh"}>Play</PlayButton>
-        </WelcomePanel>*/
+        </WelcomePanel>: null
+        }
+        
+    </CanvasContainer>
+};
 export default Main;

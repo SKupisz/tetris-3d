@@ -160,14 +160,14 @@ export const SteeringButtons = styled.section`
 `;
 
 export const SteeringButton = styled.div`
-    width: calc(33% - 10px);
-    height: calc(6vh - 10px);
+    width: calc(26% - 10px);
+    height: calc(5vh - 10px);
     margin: 5px;
     display: inline-block;
     vertical-align: top;
     text-align: center;
     color: rgba(240,240,240,.95);
-    line-height: calc(7vh - 10px);
+    line-height: calc(6vh - 10px);
     font-size: 0.95em;
     ${(props) => 
         props.isbutton ? `
