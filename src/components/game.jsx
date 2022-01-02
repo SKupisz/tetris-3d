@@ -194,8 +194,20 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
                                 }
                                 break;
                             case 2:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    let helper = operand[i]["blocksPositions"][j][1];
+                                    operand[i]["blocksPositions"][j][1] = operand[i]["blocksPositions"][j][2];
+                                    operand[i]["blocksPositions"][j][2] = helper;
+                                    operand[i]["blocksPositions"][j][1]*=(-1);
+                                }
                                 break;
                             case -2:
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    let helper = operand[i]["blocksPositions"][j][2];
+                                    operand[i]["blocksPositions"][j][2] = operand[i]["blocksPositions"][j][1];
+                                    operand[i]["blocksPositions"][j][1] = helper;
+                                    operand[i]["blocksPositions"][j][2]*=(-1);
+                                }
                                 break;
                             default: 
                                 break;
