@@ -1,8 +1,7 @@
 import React, {useRef, useState, useEffect} from "react";
-import {useLoader, useFrame, useThree} from "@react-three/fiber";
+import {useLoader, useFrame} from "@react-three/fiber";
 import {OrbitControls} from "@react-three/drei";
 import {TextureLoader} from "three";
-import * as THREE from "three";
 
 import BoxTexture from "../assets/box.jpg";
 import BackgroundOfTheWall from "../assets/wall.png";
@@ -107,7 +106,7 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
 
     useFrame(({clock}) => {
 
-        const elapsedTime = clock.getElapsedTime();
+        //const elapsedTime = clock.getElapsedTime();
 
         let operand = [...currentBlocks];
         let flag = false, movingFlag = false; // flag is for detecting if any of the blocks are moving
@@ -187,6 +186,16 @@ const Game = ({isPlayed, playedCallback, counter, setCounter, movingDirection, d
                                 }
                                 break;
                             case -1: 
+                                for(let j = 0 ; j < operand[i]["blocksPositions"].length; j++){
+                                    let helper = operand[i]["blocksPositions"][j][2];
+                                    operand[i]["blocksPositions"][j][2] = operand[i]["blocksPositions"][j][0];
+                                    operand[i]["blocksPositions"][j][0] = helper;
+                                    operand[i]["blocksPositions"][j][2]*=(-1);
+                                }
+                                break;
+                            case 2:
+                                break;
+                            case -2:
                                 break;
                             default: 
                                 break;

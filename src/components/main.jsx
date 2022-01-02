@@ -72,6 +72,8 @@ const Main = () => {
                 <RotatingButtonsPanel className="block-center">
                     <RotateButton onClick = {() => setRotatingDirection(-1)}>Left</RotateButton>
                     <RotateButton onClick={() => setRotatingDirection(1)}>Right</RotateButton>
+                    <RotateButton onClick = {() => setRotatingDirection(-2)}>LeftUp</RotateButton>
+                    <RotateButton onClick={() => setRotatingDirection(2)}>RightDown</RotateButton>
                 </RotatingButtonsPanel>
             </SteeringPanel> : <WelcomePanel className="block-center">
                 <WelcomeHeader className="block-center">
